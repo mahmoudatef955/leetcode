@@ -4,7 +4,7 @@
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 
 
-from merge_two_sorted_list import Solution
+from ast import List
 
 
 def print_hi(name):
@@ -12,9 +12,12 @@ def print_hi(name):
     print(f"Hi, {name}")  # Press ⌘F8 to toggle the breakpoint.
 
 
+def remove_duplicates(nums: List[int]) -> int:
+    print(f"nums: {nums}")
+
+
 # Press the green button in the gutter to run the script.
 if __name__ == "__main__":
     sln = Solution()
-    print_hi(sln.mergeTwoLists())
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    sss = sln.removeDuplicates([1, 1, 2])
+    print(sss)
