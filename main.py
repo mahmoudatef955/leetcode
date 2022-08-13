@@ -1,77 +1,107 @@
+import math
 import time
+from typing import List
 
 
-def non_repeat_substring(str1):
-    max_substring_size = 0
-    characters = {str1[0]: 0}
-    start_pointer = 0
-    for i in range(len(str1)):
-        characters[str1[i]] = characters.get(str1[i], 0) + 1
-
-        if max(characters.values()) == 1:
-            max_substring_size = max(max_substring_size, i - start_pointer + 1)
-
-        while max(characters.values()) > 1:
-            if characters.get(str1[start_pointer], 0) > 1:
-                characters[str1[start_pointer]] = characters[str1[start_pointer]] - 1
-            else:
-                characters.pop(str1[start_pointer])
-
-            start_pointer += 1
-
-    return max_substring_size
-
-
-def length_of_longest_substring(arr, k):
-    return 2
-
-
-def is_contains_unique_char(pattern_dict: dict):
-    for count in pattern_dict.values():
-        if count > 1:
-            return False
-    return True
-
-
-def is_contains_all_pattern(pattern_dict: dict):
-    for count in pattern_dict.values():
-        if count != 1:
-            return False
-    return True
-
-
-def find_permutation(str1, pattern):
+def find_substring(str1, pattern):
     pattern_char_count = {pattern[0]: 0}
     for s in pattern:
         pattern_char_count[s] = pattern_char_count.get(s, 0) + 1
 
-    window_char_count = {str1[0]: 0}
-    start_pointer = 0
+    start_pointer, min_start_pointer, min_window_size = 0, 0, math.inf
+    matched_count = 0
 
     for i in range(len(str1)):
-        if str1[i] not in pattern:
-            start_pointer = i + 1
-            window_char_count.clear()
-            continue
+        if str1[i] in pattern:
+            pattern_char_count[str1[i]] -= 1
+            if pattern_char_count[str1[i]] >= 0:
+                matched_count += 1
 
-        window_char_count[str1[i]] = window_char_count.get(str1[i], 0) + 1
-        while window_char_count.get(str1[i], 0) > pattern_char_count.get(str1[i], 0):
-            window_char_count[str1[start_pointer]] = window_char_count.get(str1[start_pointer], 0) - 1
+        while matched_count == len(pattern):
+            if i - start_pointer + 1 < min_window_size:
+                min_start_pointer = start_pointer
+                min_window_size = i - start_pointer + 1
+
+            if str1[start_pointer] in pattern:
+                pattern_char_count[str1[start_pointer]] += 1
+                if pattern_char_count[str1[start_pointer]] > 0:
+                    matched_count -= 1
             start_pointer += 1
 
-        if window_char_count == pattern_char_count:
-            return True
+    if min_window_size != math.inf and min_window_size > 0:
+        return str1[min_start_pointer: int(min_start_pointer + min_window_size)]
 
-    return False
+    return ""
+
+
+def find_word_concatenation(str1: str, words: List[str]) -> List[int]:
+    result_indices, matched_words = [], []
+    start_pointer, word_pointer = 0, 0
+    min_word_length = len(min(words, key=len))
+    words_count = {}
+    for word in words:
+        words_count[word] = words_count.get(word, 0) + 1
+
+    for i in range(len(str1)):
+        if str1[word_pointer:i + 1] in words:
+            w = str1[word_pointer:i + 1]
+            if words_count.get(str1[word_pointer:i + 1], 0) > 0:
+                words_count[str1[word_pointer:i + 1]] -= 1
+                matched_words.append(str1[word_pointer:i + 1])
+
+                if len(matched_words) == len(words):
+                    result_indices.append(start_pointer)
+                    start_pointer = i + 1
+                    # word_pointer = i + 1
+                    matched_words.clear()
+                    for word in words:
+                        words_count[word] = words_count.get(word, 0) + 1
+
+            else:
+                # start_pointer = i + 1
+                word_pointer = i + 1
+                # matched_words.clear()
+            word_pointer = i + 1
+
+        elif i - word_pointer + 1 >= min_word_length:
+            start_pointer = i + 1
+            word_pointer = i + 1
+            matched_words.clear()
+
+    return result_indices
+
+
+def remove_duplicates(arr):
+    last_non_duplicate = 1
+
+    pointer = 1
+    while pointer < len(arr):
+        if arr[pointer] != arr[pointer - 1]:
+            arr[last_non_duplicate] = arr[pointer]
+            last_non_duplicate += 1
+
+        pointer += 1
+
+    return last_non_duplicate
+
+
+def removeElement(nums: List[int], val: int) -> int:
+    next_pointer = 0
+    for i in range(len(nums)):
+        if nums[i] != val:
+            nums[next_pointer] = nums[i]
+            next_pointer += 1
+    print(nums)
+    return next_pointer
 
 
 if __name__ == "__main__":
     st = time.time()
 
-    print(find_permutation("ooolleoooleh", "hello"))
-    print(find_permutation("bcdxabcdy", "bcdyabcdx"))
-    print(find_permutation("odicf", "dc"))
-    print(find_permutation("aaacb", "abc"))
+    # print(pair_with_targetsum([1, 2, 3, 4, 6], 6))
+    # print(pair_with_targetsum([2, 5, 9, 11], 11))
+    # print(removeElement([3, 2, 2, 3], 3))
+    print(removeElement([0, 1, 2, 2, 3, 0, 4, 2], 2))
 
     et = time.time()
     elapsed_time = et - st
