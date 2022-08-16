@@ -75,9 +75,8 @@ def find_word_concatenation(str1: str, words: List[str]) -> List[int]:
 if __name__ == "__main__":
     st = time.time()
 
-    # print(search_triplets([-1, 0, 1, 2, -1, -4]))
-    # print(search_triplets([-5, 2, -1, -2, 3]))
-    # print(search_triplets([-1, 0, 1, 2, -1, -4]))
+    # print(triplet_sum_close_to_target([-3, -1, 1, 2], 1))
+    # print(triplet_sum_close_to_target([1, 0, 1, 1], 100))
 
     et = time.time()
     elapsed_time = et - st
