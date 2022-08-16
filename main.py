@@ -1,4 +1,5 @@
 import math
+from operator import le
 import time
 from typing import List
 
@@ -29,7 +30,7 @@ def find_substring(str1, pattern):
             start_pointer += 1
 
     if min_window_size != math.inf and min_window_size > 0:
-        return str1[min_start_pointer: int(min_start_pointer + min_window_size)]
+        return str1[min_start_pointer : int(min_start_pointer + min_window_size)]
 
     return ""
 
@@ -43,11 +44,11 @@ def find_word_concatenation(str1: str, words: List[str]) -> List[int]:
         words_count[word] = words_count.get(word, 0) + 1
 
     for i in range(len(str1)):
-        if str1[word_pointer:i + 1] in words:
-            w = str1[word_pointer:i + 1]
-            if words_count.get(str1[word_pointer:i + 1], 0) > 0:
-                words_count[str1[word_pointer:i + 1]] -= 1
-                matched_words.append(str1[word_pointer:i + 1])
+        if str1[word_pointer : i + 1] in words:
+            w = str1[word_pointer : i + 1]
+            if words_count.get(str1[word_pointer : i + 1], 0) > 0:
+                words_count[str1[word_pointer : i + 1]] -= 1
+                matched_words.append(str1[word_pointer : i + 1])
 
                 if len(matched_words) == len(words):
                     result_indices.append(start_pointer)
@@ -71,37 +72,12 @@ def find_word_concatenation(str1: str, words: List[str]) -> List[int]:
     return result_indices
 
 
-def remove_duplicates(arr):
-    last_non_duplicate = 1
-
-    pointer = 1
-    while pointer < len(arr):
-        if arr[pointer] != arr[pointer - 1]:
-            arr[last_non_duplicate] = arr[pointer]
-            last_non_duplicate += 1
-
-        pointer += 1
-
-    return last_non_duplicate
-
-
-def removeElement(nums: List[int], val: int) -> int:
-    next_pointer = 0
-    for i in range(len(nums)):
-        if nums[i] != val:
-            nums[next_pointer] = nums[i]
-            next_pointer += 1
-    print(nums)
-    return next_pointer
-
-
 if __name__ == "__main__":
     st = time.time()
 
-    # print(pair_with_targetsum([1, 2, 3, 4, 6], 6))
-    # print(pair_with_targetsum([2, 5, 9, 11], 11))
-    # print(removeElement([3, 2, 2, 3], 3))
-    print(removeElement([0, 1, 2, 2, 3, 0, 4, 2], 2))
+    # print(search_triplets([-1, 0, 1, 2, -1, -4]))
+    # print(search_triplets([-5, 2, -1, -2, 3]))
+    # print(search_triplets([-1, 0, 1, 2, -1, -4]))
 
     et = time.time()
     elapsed_time = et - st
