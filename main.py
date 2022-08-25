@@ -1,50 +1,93 @@
+from cgitb import small
 import math
 from operator import le
 import time
 from typing import List
 
 
-def search_quadruplets(arr: List[int], target):
-    quadruplets = []
-    arr.sort()
-    for i in range(len(arr) - 3):
-        if i > 0 and arr[i] == arr[i - 1]:
-            continue
-        first_target = target - arr[i]
-        for j in range(i + 1, len(arr) - 1):
-            if j > i + 1 and arr[j] == arr[j - 1]:
-                continue
-            second_target = first_target - arr[j]
-            left, right = j + 1, len(arr) - 1
-            while left < right:
-                if arr[left] + arr[right] == second_target:
-                    quadruplets.append([arr[i], arr[j], arr[left], arr[right]])
-                    left += 1
-                    while arr[left] == arr[left - 1] and left < right:
-                        left += 1
+def backspace_compare(str1, str2):
+    pointer1, pointer2 = len(str1) - 1, len(str2) - 1
+    while pointer1 > 0 or pointer2 > 0:
+        if pointer1 > 0 and str1[pointer1] == "#":
+            count = 0
+            while pointer1 > 0 and str1[pointer1] == "#":
+                count += 1
+                pointer1 -= 1
 
-                    right -= 1
-                    while (
-                        right != len(arr) - 1 and arr[right] == arr[right + 1]
-                    ) and left < right:
-                        right -= 1
-                elif arr[left] + arr[right] < second_target:
-                    left += 1
+            while count > 0:
+                pointer1 -= 1
+                if pointer1 < 0 or str1[pointer1] != "#":
+                    count -= 1
                 else:
-                    right -= 1
+                    count += 1
+            continue
 
-    return quadruplets
+        if pointer2 > 0 and str2[pointer2] == "#":
+            count = 0
+            while pointer2 > 0 and str2[pointer2] == "#":
+                count += 1
+                pointer2 -= 1
+            while count > 0:
+                pointer2 -= 1
+                if pointer2 < 0 or str2[pointer2] != "#":
+                    count -= 1
+                else:
+                    count += 1
+            continue
+
+        if pointer1 < 0 or pointer2 < 0:
+            return False
+
+        if str1[pointer1] != str2[pointer2]:
+            return False
+
+        if pointer1 > 0 and pointer2 > 0:
+            pointer1 -= 1
+            pointer2 -= 1
+
+    if (pointer1 < 0 and pointer2 >= 0) or (pointer2 < 0 and pointer1 >= 0):
+        return False
+    return True
+
+
+def findUnsortedSubarray(nums: List[int]) -> int:
+    low, high = 0, len(nums) - 1
+    while low < len(nums) - 1 and nums[low + 1] >= nums[low]:
+        low += 1
+    while high > 0 and nums[high - 1] <= nums[high]:
+        high -= 1
+
+    if low == len(nums) - 1:
+        return 0
+    if low == 0 and high == len(nums) - 1:
+        return len(nums)
+
+    lowest = nums[low]
+    highest = nums[high]
+    for i in range(low, high + 1):
+        lowest = min(lowest, nums[i])
+        highest = max(highest, nums[i])
+
+    while low > 0 and nums[low - 1] > lowest:
+        low -= 1
+    while high < len(nums) - 1 and nums[high + 1] < highest:
+        high += 1
+
+    return high - low + 1
 
 
 if __name__ == "__main__":
     st = time.time()
 
-    # print(search_quadruplets([2, 0, -1, 1, -2, 2], 2))
-    # print(search_quadruplets([4, 1, 2, -1, 1, -3], 1))
-    # print(search_quadruplets([0, 0, 0, 0], 0))
-    print(search_quadruplets([-2, -1, -1, 1, 1, 2, 2], 0))
-    # print(search_quadruplets([1, -2, -5, -4, -3, 3, 3, 5], -11))
-
+    # print(backspace_compare("gtc#uz#", "gtcm##uz#"))
+    # print(backspace_compare("bxj##tw", "bxo#j##tw"))
+    # print(backspace_compare("ab##", "c#d#"))
+    # print(backspace_compare("ab##", "c#d#"))
+    print(findUnsortedSubarray([1, 2, 5, 3, 7, 10, 9, 12]))
+    # print(findUnsortedSubarray([1, 3, 2, 0, -1, 7, 10]))
+    # print(findUnsortedSubarray([1, 2, 3]))
+    # print(findUnsortedSubarray([1, 2, 3, 3, 3]))
+    print(findUnsortedSubarray([1, 3, 2, 2, 2]))
     et = time.time()
     elapsed_time = et - st
     # print('\nExecution time :', elapsed_time, 'seconds')
