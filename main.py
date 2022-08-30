@@ -81,15 +81,32 @@ class Node:
         self.value = value
         self.next = next
 
+    def print_list(self):
+        temp = self
+        while temp is not None:
+            print(temp.value, end="")
+            temp = temp.next
+        print()
 
-def has_cycle(head):
-    slow_pointer, fast_pointer = head, head.next
-    while fast_pointer.next != None:
-        if slow_pointer.value == fast_pointer.value:
-            return True
+
+def find_cycle_start(head):
+    slow_pointer, fast_pointer = head, head
+    slow_pointer_count = 0
+    while fast_pointer is not None and fast_pointer.next is not None:
         slow_pointer = slow_pointer.next
         fast_pointer = fast_pointer.next.next
-    return False
+        slow_pointer_count += 1
+        if slow_pointer == fast_pointer:
+            current = head
+            nodes = {head}
+            while True:
+                slow_pointer = slow_pointer.next
+                if slow_pointer in nodes:
+                    return slow_pointer
+                current = current.next
+                nodes.add(current)
+
+    return None
 
 
 def main():
@@ -99,27 +116,21 @@ def main():
     head.next.next.next = Node(4)
     head.next.next.next.next = Node(5)
     head.next.next.next.next.next = Node(6)
-    print("LinkedList has cycle: " + str(has_cycle(head)))
 
     head.next.next.next.next.next.next = head.next.next
-    print("LinkedList has cycle: " + str(has_cycle(head)))
+    print("LinkedList cycle start: " + str(find_cycle_start(head).value))
 
     head.next.next.next.next.next.next = head.next.next.next
-    print("LinkedList has cycle: " + str(has_cycle(head)))
+    print("LinkedList cycle start: " + str(find_cycle_start(head).value))
+
+    head.next.next.next.next.next.next = head
+    print("LinkedList cycle start: " + str(find_cycle_start(head).value))
 
 
 if __name__ == "__main__":
     st = time.time()
     main()
-    # print(backspace_compare("gtc#uz#", "gtcm##uz#"))
-    # print(backspace_compare("bxj##tw", "bxo#j##tw"))
-    # print(backspace_compare("ab##", "c#d#"))
-    # print(backspace_compare("ab##", "c#d#"))
-    # print(findUnsortedSubarray([1, 2, 5, 3, 7, 10, 9, 12]))
-    # print(findUnsortedSubarray([1, 3, 2, 0, -1, 7, 10]))
-    # print(findUnsortedSubarray([1, 2, 3]))
-    # print(findUnsortedSubarray([1, 2, 3, 3, 3]))
-    # print(findUnsortedSubarray([1, 3, 2, 2, 2]))
+
     et = time.time()
     elapsed_time = et - st
     # print('\nExecution time :', elapsed_time, 'seconds')
