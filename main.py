@@ -81,32 +81,10 @@ class Node:
         self.value = value
         self.next = next
 
-    def print_list(self):
-        temp = self
-        while temp is not None:
-            print(temp.value, end="")
-            temp = temp.next
-        print()
 
-
-def find_cycle_start(head):
-    slow_pointer, fast_pointer = head, head
-    slow_pointer_count = 0
-    while fast_pointer is not None and fast_pointer.next is not None:
-        slow_pointer = slow_pointer.next
-        fast_pointer = fast_pointer.next.next
-        slow_pointer_count += 1
-        if slow_pointer == fast_pointer:
-            current = head
-            nodes = {head}
-            while True:
-                slow_pointer = slow_pointer.next
-                if slow_pointer in nodes:
-                    return slow_pointer
-                current = current.next
-                nodes.add(current)
-
-    return None
+def find_middle_of_linked_list(head):
+    # TODO: Write your code here
+    return head
 
 
 def main():
@@ -115,16 +93,14 @@ def main():
     head.next.next = Node(3)
     head.next.next.next = Node(4)
     head.next.next.next.next = Node(5)
+
+    print("Middle Node: " + str(find_middle_of_linked_list(head).value))
+
     head.next.next.next.next.next = Node(6)
+    print("Middle Node: " + str(find_middle_of_linked_list(head).value))
 
-    head.next.next.next.next.next.next = head.next.next
-    print("LinkedList cycle start: " + str(find_cycle_start(head).value))
-
-    head.next.next.next.next.next.next = head.next.next.next
-    print("LinkedList cycle start: " + str(find_cycle_start(head).value))
-
-    head.next.next.next.next.next.next = head
-    print("LinkedList cycle start: " + str(find_cycle_start(head).value))
+    head.next.next.next.next.next.next = Node(7)
+    print("Middle Node: " + str(find_middle_of_linked_list(head).value))
 
 
 if __name__ == "__main__":
