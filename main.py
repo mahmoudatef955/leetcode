@@ -76,32 +76,21 @@ def findUnsortedSubarray(nums: List[int]) -> int:
     return high - low + 1
 
 
-def find_happy_number(num):
-    slow, fast = num, num
-
-    fast_digits = [int(d) for d in str(fast)]
-    fast = sum(n * n for n in fast_digits)
-    while slow != fast:
-        slow_digits = [int(d) for d in str(slow)]
-        slow = sum(n * n for n in slow_digits)
-
-        fast_digits = [int(d) for d in str(fast)]
-        fast = sum(n * n for n in fast_digits)
-
-        if fast == 1:
-            return True
-        fast_digits = [int(d) for d in str(fast)]
-        fast = sum(n * n for n in fast_digits)
-
-        if fast == 1:
-            return True
-
-    return False
+def isPalindrome(x: int) -> bool:
+    num_str = str(x)
+    pointer1, pointer2 = 0, len(num_str) - 1
+    while pointer1 != pointer2:
+        if num_str[pointer1] != num_str[pointer2]:
+            return False
+        pointer1 += 1
+        pointer2 -= 1
+    return True
 
 
 def main():
-    print(find_happy_number(23))
-    print(find_happy_number(12))
+    print(isPalindrome(121))
+    print(isPalindrome(-121))
+    print(isPalindrome(10))
 
 
 if __name__ == "__main__":
