@@ -1,4 +1,5 @@
 from cgitb import small
+from inspect import stack
 import math
 from operator import le
 import time
@@ -87,10 +88,95 @@ def isPalindrome(x: int) -> bool:
     return True
 
 
+class Node:
+    def __init__(self, val, next=None):
+        self.val = val
+        self.next = next
+
+
+def wis_palindromic_linked_list(head):
+    fast, slow = head, head
+    first_half_stack = []
+    first_half_stack.append(head.val)
+    count = 0
+
+    # find the middle of the list
+    while fast is not None and fast.next is not None:
+        slow = slow.next
+        first_half_stack.append(slow.val)
+        count += 1
+        print(slow.val)
+        fast = fast.next.next
+
+    # pointer = head
+    # n = first_half_stack.pop()
+    # slow = slow.next
+    if count % 2 == 0:
+        first_half_stack.pop()
+
+    while slow is not None:
+        n = first_half_stack.pop()
+        print(n, slow.val)
+        if n != slow.val:
+            return False
+        slow = slow.next
+
+    # print(first_half_stack.is)
+    if len(first_half_stack) > 0:
+        return False
+
+    return True
+
+
+def reverse_linked_list(head):
+    prev = None
+    while head is not None:
+        current = head.next
+        head.next = prev
+        prev = head
+        head = current
+    return prev
+
+
+def is_palindromic_linked_list(head):
+    if head.next is None or head is None:
+        return True
+    fast, slow = head, head
+
+    # find the middle of the list
+    while fast is not None and fast.next is not None:
+        slow = slow.next
+        fast = fast.next.next
+
+    reversed_second_half = reverse_linked_list(slow)
+    reversed_second_half_copy = reversed_second_half
+
+    while head is not None and reversed_second_half is not None:
+        print(head.val, reversed_second_half.val)
+        if head.val != reversed_second_half.val:
+            break
+        head = head.next
+        reversed_second_half = reversed_second_half.next
+
+    reverse_linked_list(reversed_second_half_copy)
+
+    if head is None or reversed_second_half is None:
+        return True
+
+    return False
+
+
 def main():
-    print(isPalindrome(121))
-    print(isPalindrome(-121))
-    print(isPalindrome(10))
+    head = Node(2)
+    head.next = Node(4)
+    head.next.next = Node(4)
+    head.next.next.next = Node(2)
+    head.next.next.next.next = Node(2)
+
+    print("Is palindrome: " + str(is_palindromic_linked_list(head)))
+
+    # head.next.next.next.next.next = Node(2)
+    # print("Is palindrome: " + str(is_palindromic_linked_list(head)))
 
 
 if __name__ == "__main__":
