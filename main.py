@@ -1,4 +1,6 @@
 from __future__ import print_function
+from ast import List
+from termios import FFDLY
 import time
 
 
@@ -48,15 +50,33 @@ def reorder(head):
     return
 
 
+class Solution:
+    def merge1(self, intervals):
+        if len(intervals) < 2:
+            return intervals
+
+        merged_intervals = []
+
+        intervals.sort(key=lambda x: x[0])
+
+        start = intervals[0][0]
+        end = intervals[0][1]
+
+        for i in range(1, len(intervals)):
+            if intervals[i][0] <= end:
+                end = max(end, intervals[i][1])
+            else:
+                merged_intervals.append([start, end])
+                start = intervals[i][0]
+                end = intervals[i][1]
+
+        merged_intervals.append([start, end])
+
+        return merged_intervals
+
+
 def main():
-    head = Node(2)
-    head.next = Node(4)
-    head.next.next = Node(6)
-    head.next.next.next = Node(8)
-    head.next.next.next.next = Node(10)
-    head.next.next.next.next.next = Node(12)
-    reorder(head)
-    head.print_list()
+    print(Solution().merge1([[1, 3], [2, 6], [8, 10], [15, 18]]))
 
 
 main()
