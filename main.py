@@ -27,114 +27,50 @@ def reverse_linked_list(head):
     return prev
 
 
-def reorder(head):
-    slow, fast = head, head
-    while fast is not None and fast.next is not None:
-        slow = slow.next
-        fast = fast.next.next
+def intervalIntersection(firstList, secondList):
+    if len(firstList) == 0 or len(secondList) == 0:
+        return []
 
-    reversed_second_half = reverse_linked_list(slow)
+    intersections = []
+    secondListPointer = 0
+    firstListPointer = 0
 
-    head_copy = head
-    while reversed_second_half is not None and head.next is not None:
-        head_next = head.next
-        reversed_second_half_next = reversed_second_half.next
-        head.next = reversed_second_half
-        head.next.next = head_next
-        head = head.next.next
-        reversed_second_half = reversed_second_half_next
+    while firstListPointer < len(firstList) and secondListPointer < len(secondList):
+        x = max(firstList[firstListPointer][0], secondList[secondListPointer][0])
+        y = min(firstList[firstListPointer][1], secondList[secondListPointer][1])
+        if y >= x:
+            intersections.append([x, y])
 
-    head.next = None
-    head = head_copy
+        if y >= firstList[firstListPointer][1]:
+            firstListPointer += 1
+        if y >= secondList[secondListPointer][1]:
+            secondListPointer += 1
 
-    return
-
-
-def insert(intervals, new_interval):
-    merged = []
-    i, start, end = 0, 0, 1
-
-    # skip (and add to output) all intervals that come before the 'new_interval'
-    while i < len(intervals) and intervals[i][end] < new_interval[start]:
-        merged.append(intervals[i])
-        i += 1
-
-    # merge all intervals that overlap with 'new_interval'
-    while i < len(intervals) and intervals[i][start] <= new_interval[end]:
-        new_interval[start] = min(intervals[i][start], new_interval[start])
-        new_interval[end] = max(intervals[i][end], new_interval[end])
-        i += 1
-
-    # insert the new_interval
-    merged.append(new_interval)
-
-    # add all the remaining intervals to the output
-    while i < len(intervals):
-        merged.append(intervals[i])
-        i += 1
-    return merged
-
-
-class Solution:
-    def insert(self, intervals, newInterval):
-        # [[1, 2], [3, 5], [6, 7], [8, 10], [12, 16]], [4, 8]
-        if len(intervals) == 0:
-            return [newInterval]
-        if len(intervals) == 1 and newInterval[0] > intervals[0][1]:
-            intervals.append(newInterval)
-            return intervals
-        start = 0
-        end = 0
-        while start < len(intervals) and intervals[start][1] < newInterval[0]:
-            start += 1
-        # start -= 1
-        end = start
-        while end < len(intervals) and intervals[end][0] < newInterval[1]:
-            end += 1
-
-        while start >= len(intervals):
-            start -= 1
-        while end >= len(intervals):
-            end -= 1
-
-        if newInterval[1] < intervals[end][0] and end > 0:
-            end -= 1
-
-        if start == end == 0 and newInterval[1] < intervals[0][0]:
-            intervals.insert(0, newInterval)
-            return intervals
-
-        c = [
-            min(intervals[start][0], newInterval[0]),
-            max(intervals[end][1], newInterval[1]),
-        ]
-        print(c)
-        return intervals[:start] + [c] + intervals[end + 1 :]
+    return intersections
 
 
 def main():
     st = time.time()
-    print(Solution().insert([[1, 2], [3, 5], [6, 7], [8, 10], [12, 16]], [4, 8]))
-    print(Solution().insert([[1, 5]], [0, 3]))
-    print(Solution().insert([[1, 3], [6, 9]], [2, 5]))
-    print(Solution().insert([[1, 5]], [6, 8]))
-    print(Solution().insert([[2, 5], [6, 7], [8, 9]], [0, 1]))
+    print(
+        "Intervals Intersection: "
+        + str(intervalIntersection([[2, 3], [5, 7]], [[1, 3], [5, 6], [7, 9]]))
+    )
+    # print(
+    #     "Intervals Intersection: "
+    #     + str(intervalIntersection([[1, 3], [5, 7], [9, 12]], [[5, 10]]))
+    # )
+    # print(
+    #     "Intervals Intersection: "
+    #     + str(
+    #         intervalIntersection(
+    #             [[0, 2], [5, 10], [13, 23], [24, 25]],
+    #             [[1, 5], [8, 12], [15, 24], [25, 26]],
+    #         )
+    #     )
+    # )
     et = time.time()
     elapsed_time = et - st
     print("\nExecution time :", elapsed_time, "seconds\n")
-
-    st = time.time()
-    print(insert([[1, 2], [3, 5], [6, 7], [8, 10], [12, 16]], [4, 8]))
-    print(insert([[1, 5]], [0, 3]))
-    print(insert([[1, 3], [6, 9]], [2, 5]))
-    print(insert([[1, 5]], [6, 8]))
-    print(insert([[2, 5], [6, 7], [8, 9]], [0, 1]))
-    et = time.time()
-    elapsed_time = et - st
-    print("\nExecution time :", elapsed_time, "seconds\n")
-
-
-main()
 
 
 if __name__ == "__main__":
