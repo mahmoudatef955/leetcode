@@ -1,46 +1,4 @@
-from __future__ import print_function
-from ast import List
-from termios import FFDLY
 from heapq import *
-import time
-
-
-class Node:
-    def __init__(self, value, next=None):
-        self.value = value
-        self.next = next
-
-    def print_list(self):
-        temp = self
-        while temp is not None:
-            print(str(temp.value) + " ", end="")
-            temp = temp.next
-        print()
-
-
-def reverse_linked_list(head):
-    prev = None
-    while head is not None:
-        current = head.next
-        head.next = prev
-        prev = head
-        head = current
-    return prev
-
-
-def eraseOverlapIntervals(intervals) -> int:
-    intervals.sort(key=lambda x: x[0])
-    overlapCount = 0
-    i = 0
-    while i < len(intervals) - 1:
-        j = i + 1
-        while j < len(intervals) and intervals[j][0] < intervals[i][1]:
-            overlapCount += 1
-            if intervals[i][1] > intervals[j][1]:
-                i += 1
-            j += 1
-        i = j
-    return overlapCount
 
 
 class job:
@@ -86,7 +44,3 @@ def main():
         "Maximum CPU load at any time: "
         + str(find_max_cpu_load([job(1, 4, 2), job(2, 4, 1), job(3, 6, 5)]))
     )
-
-
-if __name__ == "__main__":
-    main()
