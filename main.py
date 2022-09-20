@@ -73,19 +73,21 @@ def find_max_cpu_load(jobs):
     return maxLoad
 
 
+def missingNumber(nums) -> int:
+    i = 0
+    while i < len(nums):
+        if nums[i] != i:
+            tmp = nums[nums[i]]
+            nums[nums[i]] = nums[i]
+            nums[i] = tmp
+        else:
+            i += 1
+
+    return nums
+
+
 def main():
-    print(
-        "Maximum CPU load at any time: "
-        + str(find_max_cpu_load([job(1, 4, 3), job(2, 5, 4), job(7, 9, 6)]))
-    )
-    print(
-        "Maximum CPU load at any time: "
-        + str(find_max_cpu_load([job(6, 7, 10), job(2, 4, 11), job(8, 12, 15)]))
-    )
-    print(
-        "Maximum CPU load at any time: "
-        + str(find_max_cpu_load([job(1, 4, 2), job(2, 4, 1), job(3, 6, 5)]))
-    )
+    print(missingNumber([9, 6, 4, 2, 3, 5, 7, 0, 1]))
 
 
 if __name__ == "__main__":
