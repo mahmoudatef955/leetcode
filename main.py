@@ -74,26 +74,28 @@ def find_max_cpu_load(jobs):
 
 
 def findDuplicate(nums) -> int:
+    duplicates = set()
     i = 0
     while i < len(nums):
         if nums[i] != i + 1:
             tmp = nums[nums[i] - 1]
             if tmp == nums[i]:
-                return tmp
+                duplicates.add(tmp)
+                i += 1
             else:
                 nums[nums[i] - 1] = nums[i]
                 nums[i] = tmp
         else:
             i += 1
 
-    # return s2 - s1
+    return list(duplicates)
 
 
 def main():
     #                    1  2  3  4  5  > 15
-    print(findDuplicate([1, 3, 4, 2, 2]))
-    print(findDuplicate([3, 1, 3, 4, 2]))
-    print(findDuplicate([2, 2, 2, 2, 2]))
+    print(findDuplicate([4, 3, 2, 7, 8, 2, 3, 1]))
+    print(findDuplicate([1, 1, 2]))
+    print(findDuplicate([1]))
 
 
 if __name__ == "__main__":
