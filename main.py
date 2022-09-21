@@ -73,21 +73,27 @@ def find_max_cpu_load(jobs):
     return maxLoad
 
 
-def missingNumber(nums) -> int:
+def findDuplicate(nums) -> int:
     i = 0
     while i < len(nums):
-        if nums[i] != i:
-            tmp = nums[nums[i]]
-            nums[nums[i]] = nums[i]
-            nums[i] = tmp
+        if nums[i] != i + 1:
+            tmp = nums[nums[i] - 1]
+            if tmp == nums[i]:
+                return tmp
+            else:
+                nums[nums[i] - 1] = nums[i]
+                nums[i] = tmp
         else:
             i += 1
 
-    return nums
+    # return s2 - s1
 
 
 def main():
-    print(missingNumber([9, 6, 4, 2, 3, 5, 7, 0, 1]))
+    #                    1  2  3  4  5  > 15
+    print(findDuplicate([1, 3, 4, 2, 2]))
+    print(findDuplicate([3, 1, 3, 4, 2]))
+    print(findDuplicate([2, 2, 2, 2, 2]))
 
 
 if __name__ == "__main__":
