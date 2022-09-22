@@ -1,5 +1,6 @@
 from __future__ import print_function
 from ast import List
+from errno import ENEEDAUTH
 from termios import FFDLY
 from heapq import *
 import time
@@ -73,29 +74,59 @@ def find_max_cpu_load(jobs):
     return maxLoad
 
 
-def findDuplicate(nums) -> int:
-    duplicates = set()
+def find_corrupt_numbers(nums):
+    numsLength = len(nums)
+    s1 = numsLength
+    s2 = 0
     i = 0
-    while i < len(nums):
+    d = None
+    m = None
+
+    while i < numsLength:
         if nums[i] != i + 1:
             tmp = nums[nums[i] - 1]
             if tmp == nums[i]:
-                duplicates.add(tmp)
+                d = tmp
+                m = i + 1
                 i += 1
             else:
                 nums[nums[i] - 1] = nums[i]
                 nums[i] = tmp
+
+        else:
+            s1 += i
+            s2 += nums[i]
+            i += 1
+
+    s2 -= d
+    return [d, s1 - s2, m]
+
+
+def firstMissingPositive(nums) -> int:
+    i, numsLength = 0, len(nums)
+    while i < numsLength:
+        if (
+            nums[i] > 0
+            and nums[i] <= numsLength
+            and nums[i] != i + 1
+            and nums[i] != nums[nums[i] - 1]
+        ):
+            j = nums[i] - 1
+            nums[i], nums[j] = nums[j], nums[i]
         else:
             i += 1
 
-    return list(duplicates)
+    for i in range(len(nums)):
+        if nums[i] != i + 1:
+            return i + 1
 
 
 def main():
     #                    1  2  3  4  5  > 15
-    print(findDuplicate([4, 3, 2, 7, 8, 2, 3, 1]))
-    print(findDuplicate([1, 1, 2]))
-    print(findDuplicate([1]))
+    print(firstMissingPositive([1, 1]))
+    # print(firstMissingPositive([3, 4, -1, 1]))
+    # print(firstMissingPositive([7, 8, 9, 11, 12]))
+    # print(find_corrupt_numbers([1]))
 
 
 if __name__ == "__main__":
