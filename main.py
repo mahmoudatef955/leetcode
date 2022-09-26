@@ -4,6 +4,7 @@ from errno import ENEEDAUTH
 from termios import FFDLY
 from heapq import *
 import time
+from typing import Optional
 
 
 class Node:
@@ -54,79 +55,84 @@ class job:
         return self.start < other.start
 
 
-def find_max_cpu_load(jobs):
-    jobs.sort(key=lambda x: x.start)
+class Node:
+    def __init__(self, value, next=None):
+        self.value = value
+        self.next = next
 
-    maxLoad = 0
-    currentLoad = 0
-    jobsHeap = []
-
-    for job in jobs:
-
-        while len(jobsHeap) > 0 and job.start >= jobsHeap[0].end:
-            currentLoad -= jobsHeap[0].cpu_load
-            heappop(jobsHeap)
-
-        heappush(jobsHeap, job)
-        currentLoad += job.cpu_load
-        maxLoad = max(maxLoad, currentLoad)
-
-    return maxLoad
+    def print_list(self):
+        temp = self
+        while temp is not None:
+            print(temp.value, end=" ")
+            temp = temp.next
+        print()
 
 
-def find_corrupt_numbers(nums):
-    numsLength = len(nums)
-    s1 = numsLength
-    s2 = 0
-    i = 0
-    d = None
-    m = None
+def reverse(head):
+    prev = None
+    while head is not None:
+        tmp = head.next
+        head.next = prev
+        prev = head
+        head = tmp
 
-    while i < numsLength:
-        if nums[i] != i + 1:
-            tmp = nums[nums[i] - 1]
-            if tmp == nums[i]:
-                d = tmp
-                m = i + 1
-                i += 1
-            else:
-                nums[nums[i] - 1] = nums[i]
-                nums[i] = tmp
+    return prev
 
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+def reverseBetween(head: Node, left: int, right: int) -> Node:
+
+    if left == right:
+        return head
+
+    p_count = 1
+    prev, last_before_reverse, first_after_reverse = None, None, None
+    first_head = head
+    ttt = None
+    while head is not None and p_count <= right:
+        if p_count < left:
+            last_before_reverse = head
+            head = head.next
+            # p_count += 1
         else:
-            s1 += i
-            s2 += nums[i]
-            i += 1
+            if p_count == left:
+                ttt = head
+            tmp = head.next
+            head.next = prev
+            prev = head
+            head = tmp
 
-    s2 -= d
-    return [d, s1 - s2, m]
+        p_count += 1
+        if p_count == right:
+            first_after_reverse = head
+            if head is not None and head.next is not None:
+                ttt.next = head.next
 
+    if last_before_reverse is not None and last_before_reverse.next is not None:
+        last_before_reverse.next = first_after_reverse
 
-def firstMissingPositive(nums) -> int:
-    i, numsLength = 0, len(nums)
-    while i < numsLength:
-        if (
-            nums[i] > 0
-            and nums[i] <= numsLength
-            and nums[i] != i + 1
-            and nums[i] != nums[nums[i] - 1]
-        ):
-            j = nums[i] - 1
-            nums[i], nums[j] = nums[j], nums[i]
-        else:
-            i += 1
-
-    for i in range(len(nums)):
-        if nums[i] != i + 1:
-            return i + 1
+    if left == 1:
+        return first_after_reverse
+    return first_head
 
 
 def main():
-    #                    1  2  3  4  5  > 15
-    print(firstMissingPositive([1, 1]))
-    # print(firstMissingPositive([3, 4, -1, 1]))
-    # print(firstMissingPositive([7, 8, 9, 11, 12]))
-    # print(find_corrupt_numbers([1]))
+    head = Node(1)
+    head.next = Node(2)
+    head.next.next = Node(3)
+    # head.next.next.next = Node(4)
+    # head.next.next.next.next = Node(5)
+
+    print("Nodes of original LinkedList are: ", end="")
+    head.print_list()
+    result = reverseBetween(head, 1, 2)
+    print("Nodes of reversed LinkedList are: ", end="")
+    result.print_list()
 
 
 if __name__ == "__main__":
