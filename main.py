@@ -1,10 +1,6 @@
 from __future__ import print_function
-from ast import List
-from errno import ENEEDAUTH
-from termios import FFDLY
-from heapq import *
-import time
-from typing import Optional
+
+from collections import deque
 
 
 class Node:
@@ -79,60 +75,41 @@ def reverse(head):
     return prev
 
 
-class ListNode:
-    def __init__(self, val=0, next=None):
+class TreeNode:
+    def __init__(self, val):
         self.val = val
-        self.next = next
+        self.left, self.right = None, None
 
 
-def reverseBetween(head: Node, left: int, right: int) -> Node:
+def traverse(root):
+    result = deque()
+    nodesQ = deque()
+    nodesQ.append(root)
+    while nodesQ:
+        q_size = len(nodesQ)
+        level_nodes = []
+        for _ in range(q_size):
+            node = nodesQ.popleft()
+            if node:
+                level_nodes.append(node.val)
+            if node.left:
+                nodesQ.append(node.left)
+            if node.right:
+                nodesQ.append(node.right)
 
-    if left == right:
-        return head
+        result.appendleft(level_nodes)
 
-    p_count = 1
-    prev, last_before_reverse, first_after_reverse = None, None, None
-    first_head = head
-    ttt = None
-    while head is not None and p_count <= right:
-        if p_count < left:
-            last_before_reverse = head
-            head = head.next
-            # p_count += 1
-        else:
-            if p_count == left:
-                ttt = head
-            tmp = head.next
-            head.next = prev
-            prev = head
-            head = tmp
-
-        p_count += 1
-        if p_count == right:
-            first_after_reverse = head
-            if head is not None and head.next is not None:
-                ttt.next = head.next
-
-    if last_before_reverse is not None and last_before_reverse.next is not None:
-        last_before_reverse.next = first_after_reverse
-
-    if left == 1:
-        return first_after_reverse
-    return first_head
+    return list(result)
 
 
 def main():
-    head = Node(1)
-    head.next = Node(2)
-    head.next.next = Node(3)
-    # head.next.next.next = Node(4)
-    # head.next.next.next.next = Node(5)
-
-    print("Nodes of original LinkedList are: ", end="")
-    head.print_list()
-    result = reverseBetween(head, 1, 2)
-    print("Nodes of reversed LinkedList are: ", end="")
-    result.print_list()
+    root = TreeNode(12)
+    root.left = TreeNode(7)
+    root.right = TreeNode(1)
+    root.left.left = TreeNode(9)
+    root.right.left = TreeNode(10)
+    root.right.right = TreeNode(5)
+    print("Reverse level order traversal: " + str(traverse(root)))
 
 
 if __name__ == "__main__":
