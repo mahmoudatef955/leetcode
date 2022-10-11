@@ -82,24 +82,28 @@ class TreeNode:
 
 
 def traverse(root):
-    result = deque()
-    nodesQ = deque()
-    nodesQ.append(root)
-    while nodesQ:
-        q_size = len(nodesQ)
-        level_nodes = []
-        for _ in range(q_size):
-            node = nodesQ.popleft()
+    if root is None:
+        return []
+    result = []
+    ltr: bool = True
+    queue = deque()
+    queue.append(root)
+    while queue:
+        l_size = len(queue)
+        level = []
+        for _ in range(l_size):
+            node = queue.popleft()
             if node:
-                level_nodes.append(node.val)
-            if node.left:
-                nodesQ.append(node.left)
-            if node.right:
-                nodesQ.append(node.right)
+                level.append(node.val) if ltr else level.insert(0, node.val)
+                if node.left:
+                    queue.append(node.left)
+                if node.right:
+                    queue.append(node.right)
 
-        result.appendleft(level_nodes)
+        result.append(level)
+        ltr = not ltr
 
-    return list(result)
+    return result
 
 
 def main():
@@ -109,7 +113,9 @@ def main():
     root.left.left = TreeNode(9)
     root.right.left = TreeNode(10)
     root.right.right = TreeNode(5)
-    print("Reverse level order traversal: " + str(traverse(root)))
+    root.right.left.left = TreeNode(20)
+    root.right.left.right = TreeNode(17)
+    print("Zigzag traversal: " + str(traverse(root)))
 
 
 if __name__ == "__main__":
