@@ -1,6 +1,11 @@
 from __future__ import print_function
-
+from ast import List
 from collections import deque
+from errno import ENEEDAUTH
+from termios import FFDLY
+from heapq import *
+import time
+from typing import Optional
 
 
 class Node:
@@ -75,47 +80,50 @@ def reverse(head):
     return prev
 
 
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
 class TreeNode:
     def __init__(self, val):
         self.val = val
         self.left, self.right = None, None
 
 
-def traverse(root):
+def find_minimum_depth(root):
     if root is None:
-        return []
-    result = []
-    ltr: bool = True
+        return 0
+    depth = 1
     queue = deque()
     queue.append(root)
-    while queue:
+    while root:
         l_size = len(queue)
-        level = []
         for _ in range(l_size):
             node = queue.popleft()
+            if node.left is None and node.right is None:
+                return depth
             if node:
-                level.append(node.val) if ltr else level.insert(0, node.val)
                 if node.left:
                     queue.append(node.left)
                 if node.right:
                     queue.append(node.right)
+        depth = depth + 1
 
-        result.append(level)
-        ltr = not ltr
-
-    return result
+    return depth
 
 
 def main():
     root = TreeNode(12)
     root.left = TreeNode(7)
     root.right = TreeNode(1)
-    root.left.left = TreeNode(9)
     root.right.left = TreeNode(10)
     root.right.right = TreeNode(5)
-    root.right.left.left = TreeNode(20)
-    root.right.left.right = TreeNode(17)
-    print("Zigzag traversal: " + str(traverse(root)))
+    print("Tree Minimum Depth: " + str(find_minimum_depth(root)))
+    root.left.left = TreeNode(9)
+    root.right.left.left = TreeNode(11)
+    print("Tree Minimum Depth: " + str(find_minimum_depth(root)))
 
 
 if __name__ == "__main__":
