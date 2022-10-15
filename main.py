@@ -1,11 +1,6 @@
 from __future__ import print_function
-from ast import List
+
 from collections import deque
-from errno import ENEEDAUTH
-from termios import FFDLY
-from heapq import *
-import time
-from typing import Optional
 
 
 class Node:
@@ -89,41 +84,54 @@ class ListNode:
 class TreeNode:
     def __init__(self, val):
         self.val = val
-        self.left, self.right = None, None
+        self.left, self.right, self.next = None, None, None
+
+    # level order traversal using 'next' pointer
+    def print_level_order(self):
+        nextLevelRoot = self
+        while nextLevelRoot:
+            current = nextLevelRoot
+            nextLevelRoot = None
+            while current:
+                print(str(current.val) + " ", end='')
+                if not nextLevelRoot:
+                    if current.left:
+                        nextLevelRoot = current.left
+                    elif current.right:
+                        nextLevelRoot = current.right
+                current = current.next
+            print()
 
 
-def find_minimum_depth(root):
-    if root is None:
-        return 0
-    depth = 1
+def connect_level_order_siblings(root):
     queue = deque()
     queue.append(root)
-    while root:
+    while queue:
         l_size = len(queue)
-        for _ in range(l_size):
+        for i in range(l_size):
             node = queue.popleft()
-            if node.left is None and node.right is None:
-                return depth
             if node:
+                if i < l_size - 1:
+                    node.next = queue[0]
                 if node.left:
                     queue.append(node.left)
                 if node.right:
                     queue.append(node.right)
-        depth = depth + 1
 
-    return depth
+    return root
 
 
 def main():
     root = TreeNode(12)
     root.left = TreeNode(7)
     root.right = TreeNode(1)
+    root.left.left = TreeNode(9)
     root.right.left = TreeNode(10)
     root.right.right = TreeNode(5)
-    print("Tree Minimum Depth: " + str(find_minimum_depth(root)))
-    root.left.left = TreeNode(9)
-    root.right.left.left = TreeNode(11)
-    print("Tree Minimum Depth: " + str(find_minimum_depth(root)))
+    connect_level_order_siblings(root)
+
+    print("Level order traversal using 'next' pointer: ")
+    root.print_level_order()
 
 
 if __name__ == "__main__":
