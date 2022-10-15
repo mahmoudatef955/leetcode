@@ -75,35 +75,16 @@ def reverse(head):
     return prev
 
 
-class ListNode:
-    def __init__(self, val=0, next=None):
-        self.val = val
-        self.next = next
-
-
 class TreeNode:
     def __init__(self, val):
         self.val = val
-        self.left, self.right, self.next = None, None, None
-
-    # level order traversal using 'next' pointer
-    def print_level_order(self):
-        nextLevelRoot = self
-        while nextLevelRoot:
-            current = nextLevelRoot
-            nextLevelRoot = None
-            while current:
-                print(str(current.val) + " ", end='')
-                if not nextLevelRoot:
-                    if current.left:
-                        nextLevelRoot = current.left
-                    elif current.right:
-                        nextLevelRoot = current.right
-                current = current.next
-            print()
+        self.left, self.right = None, None
 
 
-def connect_level_order_siblings(root):
+def tree_right_view(root):
+    if root is None:
+        return []
+    result = []
     queue = deque()
     queue.append(root)
     while queue:
@@ -111,14 +92,13 @@ def connect_level_order_siblings(root):
         for i in range(l_size):
             node = queue.popleft()
             if node:
-                if i < l_size - 1:
-                    node.next = queue[0]
+                if i == l_size - 1:
+                    result.append(node)
                 if node.left:
                     queue.append(node.left)
                 if node.right:
                     queue.append(node.right)
-
-    return root
+    return result
 
 
 def main():
@@ -128,10 +108,11 @@ def main():
     root.left.left = TreeNode(9)
     root.right.left = TreeNode(10)
     root.right.right = TreeNode(5)
-    connect_level_order_siblings(root)
-
-    print("Level order traversal using 'next' pointer: ")
-    root.print_level_order()
+    root.left.left.left = TreeNode(3)
+    result = tree_right_view(root)
+    print("Tree right view: ")
+    for node in result:
+        print(str(node.val) + " ", end='')
 
 
 if __name__ == "__main__":
