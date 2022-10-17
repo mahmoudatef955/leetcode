@@ -10,14 +10,31 @@ class TreeNode:
         self.right = right
 
 
-def has_path(root, sum):
+def find_paths(root, sum):
     if root is None:
-        return False
+        return []
+    all_paths = []
+    find_path_rec(root, sum, all_paths, [])
+    return all_paths
 
-    if root.left is None and root.right is None and root.val == sum:
-        return True
 
-    return has_path(root.left, sum - root.val) or has_path(root.right, sum - root.val)
+def find_path_rec(current_node, sum, result, current_path):
+    if current_node is None:
+        return
+
+    current_path.append(current_node.val)
+    if (
+        current_node.left is None
+        and current_node.right is None
+        and current_node.val == sum
+    ):
+        result.append(list(current_path))
+    else:
+        # current_path.append(root.val)
+        find_path_rec(current_node.left, sum - current_node.val, result, current_path)
+        find_path_rec(current_node.right, sum - current_node.val, result, current_path)
+
+    del current_path[-1]
 
 
 def main():
@@ -25,11 +42,11 @@ def main():
     root = TreeNode(12)
     root.left = TreeNode(7)
     root.right = TreeNode(1)
-    root.left.left = TreeNode(9)
+    root.left.left = TreeNode(4)
     root.right.left = TreeNode(10)
     root.right.right = TreeNode(5)
-    print("Tree has path: " + str(has_path(root, 23)))
-    print("Tree has path: " + str(has_path(root, 16)))
+    sum = 23
+    print("Tree paths with sum " + str(sum) + ": " + str(find_paths(root, sum)))
 
 
 if __name__ == "__main__":
