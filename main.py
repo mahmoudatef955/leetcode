@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-from collections import deque
-
 
 class TreeNode:
     def __init__(self, val, left=None, right=None):
@@ -10,43 +8,38 @@ class TreeNode:
         self.right = right
 
 
-def find_paths(root, sum):
-    if root is None:
-        return []
-    all_paths = []
-    find_path_rec(root, sum, all_paths, [])
-    return all_paths
+def find_sum_of_path_numbers(root):
+    all_sum = find_sum_of_path_numbers_rec(root, 0)
+    return all_sum
 
 
-def find_path_rec(current_node, sum, result, current_path):
-    if current_node is None:
-        return
-
-    current_path.append(current_node.val)
-    if (
-        current_node.left is None
-        and current_node.right is None
-        and current_node.val == sum
-    ):
-        result.append(list(current_path))
-    else:
-        # current_path.append(root.val)
-        find_path_rec(current_node.left, sum - current_node.val, result, current_path)
-        find_path_rec(current_node.right, sum - current_node.val, result, current_path)
-
-    del current_path[-1]
+def find_sum_of_path_numbers_rec(node, current_sum):
+    # current_num = current_num + str(node.val)
+    # current_num.append(str(node.val))
+    # if node.left is None and node.right is None:
+    #     all_sum.append(int(''.join(list(current_num))))
+    # if node.left:
+    #     find_sum_of_path_numbers_rec(node.left, current_num, all_sum)
+    # if node.right:
+    #     find_sum_of_path_numbers_rec(node.right, current_num, all_sum)
+    #
+    # del current_num[-1]
+    if node is None:
+        return 0
+    current_sum = current_sum * 10 + node.val
+    if node.left is None and node.right is None:
+        return current_sum
+    return find_sum_of_path_numbers_rec(node.left, current_sum) + find_sum_of_path_numbers_rec(node.right, current_sum)
 
 
 def main():
-
-    root = TreeNode(12)
-    root.left = TreeNode(7)
+    root = TreeNode(1)
+    root.left = TreeNode(0)
     root.right = TreeNode(1)
-    root.left.left = TreeNode(4)
-    root.right.left = TreeNode(10)
+    root.left.left = TreeNode(1)
+    root.right.left = TreeNode(6)
     root.right.right = TreeNode(5)
-    sum = 23
-    print("Tree paths with sum " + str(sum) + ": " + str(find_paths(root, sum)))
+    print("Total Sum of Path Numbers: " + str(find_sum_of_path_numbers(root)))
 
 
 if __name__ == "__main__":
