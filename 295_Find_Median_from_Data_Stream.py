@@ -1,13 +1,14 @@
-from __future__ import print_function
-
-from heapq import *
-
-
-class MedianOfAStream:
+class MedianFinder:
     minHeap = []
     maxHeap = []
 
-    def insert_num(self, num):
+    def __init__(self):
+        minHeap = []
+        maxHeap = []
+
+    def addNum(self, num: int) -> None:
+        if not num:
+            return
         if not self.maxHeap or -self.maxHeap[0] >= num:
             heappush(self.maxHeap, -num)
         else:
@@ -18,25 +19,16 @@ class MedianOfAStream:
         if len(self.maxHeap) < len(self.minHeap):
             heappush(self.maxHeap, -heappop(self.minHeap))
 
-    def find_median(self):
+    def findMedian(self) -> float:
         if not self.maxHeap and not self.minHeap:
             return 0.0
         if len(self.maxHeap) == len(self.minHeap):
             return (-self.maxHeap[0] + self.minHeap[0]) / 2
+
         else:
             return -self.maxHeap[0]
 
-
-def main():
-    medianOfAStream = MedianOfAStream()
-    # medianOfAStream.insert_num(3)
-    medianOfAStream.insert_num(1)
-    print("The median is: " + str(medianOfAStream.find_median()))
-    medianOfAStream.insert_num(5)
-    print("The median is: " + str(medianOfAStream.find_median()))
-    medianOfAStream.insert_num(4)
-    print("The median is: " + str(medianOfAStream.find_median()))
-
-
-if __name__ == "__main__":
-    main()
+        # Your MedianFinder object will be instantiated and called as such:
+# obj = MedianFinder()
+# obj.addNum(num)
+# param_2 = obj.findMedian()
