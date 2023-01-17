@@ -1,42 +1,47 @@
 from __future__ import print_function
 
 
-class Solution:
-    def letterCasePermutation(self, s: str):
-        def per_rec(path, res, letters):
-            if letters is None or len(path) == len(s):
-                res.append("".join(path))
-                return
-            if letters[0].isdigit():
-                path.append(letters[0])
-                per_rec(path, res, letters[1:])
-                path.pop()
-            elif letters[0].islower():
-                path.append(letters[0])
-                per_rec(path, res, letters[1:])
-                path.pop()
-                path.append(letters[0].upper())
-                per_rec(path, res, letters[1:])
-                path.pop()
-            elif letters[0].isupper():
-                path.append(letters[0])
-                per_rec(path, res, letters[1:])
-                path.pop()
-                path.append(letters[0].lower())
-                per_rec(path, res, letters[1:])
-                path.pop()
+def binary_search(arr, key):
+    if arr[0] > arr[-1]:
+        return binary_search_dec_rec(arr, key, 0, len(arr))
+    else:
+        return binary_search_acc_rec(arr, key, 0, len(arr))
 
-        res = []
-        path = []
-        per_rec(path, res, s)
-        return res
+
+def binary_search_acc_rec(arr, key, lower, upper):
+    if lower > upper or lower == len(arr):
+        return -1
+
+    middle = (lower + upper) // 2
+    print(middle)
+
+    if arr[middle] == key:
+        return middle
+    elif arr[middle] < key:
+        return binary_search_acc_rec(arr, key, middle + 1, upper)
+    else:
+        return binary_search_acc_rec(arr, key, lower, middle - 1)
+
+
+def binary_search_dec_rec(arr, key, lower, upper):
+    if lower > upper:
+        return -1
+
+    middle = (lower + upper) // 2
+
+    if arr[middle] == key:
+        return middle
+    elif arr[middle] > key:
+        return binary_search_dec_rec(arr, key, middle + 1, upper)
+    else:
+        return binary_search_dec_rec(arr, key, lower, middle - 1)
 
 
 def main():
-    # print("String permutations are: " +
-    #       str(Solution().letterCasePermutation("ad52")))
-    print("String permutations are: " +
-          str(Solution().letterCasePermutation("ab7c")))
+    print(binary_search([-1, 0, 3, 5, 9, 12], 13))
+    # print(binary_search([1, 2, 3, 4, 5, 6, 7], 5))
+    # print(binary_search([10, 6, 4], 10))
+    # print(binary_search([10, 6, 4], 4))
 
 
 if __name__ == "__main__":
