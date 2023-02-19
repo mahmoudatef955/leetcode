@@ -27,29 +27,26 @@ def search_next_letter(letters, target):
 
 
 class Solution:
-    def isPalindrome(self, s: str) -> bool:
-        s = re.sub(r'[^a-zA-Z0-9]+', '', s).lower()
-        pointer1 = 0
-        pointer2 = len(s) - 1
+    def reverseWords(self, s: str) -> str:
+        words = re.sub(' +', ' ', s.strip()).split(' ')
+        print(words)
 
-        print(s)
-        while pointer2 > pointer1:
+        left_pointer = 0
+        right_pinter = len(words) - 1
 
-            if s[pointer1] != s[pointer2]:
-                return False
+        while left_pointer < right_pinter:
+            tmp = words[left_pointer]
+            words[left_pointer] = words[right_pinter]
+            words[right_pinter] = tmp
 
-            pointer1 += 1
-            pointer2 -= 1
+            left_pointer += 1
+            right_pinter -= 1
 
-        return True
+        return " ".join(words)
 
 
 def main():
-    # print(search_next_letter(['a', 'c', 'f', 'h'], 'f'))
-    # print(search_next_letter(['a', 'c', 'f', 'h'], 'h'))
-    # print(search_next_letter(['a', 'c', 'f', 'h'], 'm'))
-    # print(search_next_letter(["e", "e", "g", "g"], 'g'))
-    print(Solution().isPalindrome("ab_a"))
+    print(Solution().reverseWords("a good   example"))
 
 
 if __name__ == "__main__":
