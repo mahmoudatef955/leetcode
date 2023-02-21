@@ -1,7 +1,5 @@
 from __future__ import print_function
 
-import re
-
 
 def search_next_letter(letters, target):
     def next_greater_rec(start: int, end: int):
@@ -27,27 +25,44 @@ def search_next_letter(letters, target):
 
 
 class Solution:
-    def reverseWords(self, s: str) -> str:
-        words = re.sub(' +', ' ', s.strip()).split(' ')
-        print(words)
+    def validPalindromeNormal(self, s: str) -> bool:
+        left = 0
+        right = len(s) - 1
 
-        left_pointer = 0
-        right_pinter = len(words) - 1
+        while left < right:
+            if s[left] != s[right]:
+                return False
+            left += 1
+            right -= 1
+        return True
 
-        while left_pointer < right_pinter:
-            tmp = words[left_pointer]
-            words[left_pointer] = words[right_pinter]
-            words[right_pinter] = tmp
+    def validPalindrome(self, s: str) -> bool:
+        left = 0
+        right = len(s) - 1
+        deleted_char_count = 0
 
-            left_pointer += 1
-            right_pinter -= 1
+        while left < right:
+            if s[left] == s[right]:
+                left += 1
+                right -= 1
 
-        return " ".join(words)
+            else:
+                return self.validPalindromeNormal(s[left + 1:right + 1]) or self.validPalindromeNormal(s[left:right])
+
+        return True
 
 
 def main():
-    print(Solution().reverseWords("a good   example"))
+    # print(Solution().validPalindrome(
+    #     "ebcbbececabbacecbbcbe"))
+    # print(Solution().validPalindrome(
+    #     "aguokepatgbnvfqmgmlcupuufxoohdfpgjdmysgvhmvffcnqxjjxqncffvmhvgsymdjgpfdhooxfuupuculmgmqfvnbgtapekouga"))
+
+    print(Solution().validPalindrome(
+        "aba"))
 
 
 if __name__ == "__main__":
     main()
+
+# cupuufxoohdfpgjdmysgvhmvffcnqxjjxqncffvmhvgsymdjgpfdhooxfuupucu
