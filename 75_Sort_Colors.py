@@ -1,22 +1,26 @@
-from ast import List
-
-
 class Solution:
-    def sortColors(self, arr: List[int]) -> None:
+    def sortColors(self, nums: List[int]) -> None:
         """
         Do not return anything, modify nums in-place instead.
         """
-        left, right = 0, len(arr) - 1
+        if len(nums) == 1:
+            return nums
 
-        for i in range(len(arr)):
-            while arr[i] == 2 and i < right:
-                temp = arr[right]
-                arr[right] = arr[i]
-                arr[i] = temp
-                right -= 1
+        left = 0
+        right = 1
+        for current_color in range(3):
+            while right < len(nums):
+                if nums[left] == current_color:
+                    left += 1
+                    right = left + 1
+                elif nums[right] == current_color:
+                    tmp = nums[left]
+                    nums[left] = nums[right]
+                    nums[right] = tmp
+                    left += 1
+                    right = left + 1
+                else:
+                    right += 1
+            right = left + 1
 
-            while arr[i] == 0 and i > left:
-                temp = arr[left]
-                arr[left] = arr[i]
-                arr[i] = temp
-                left += 1
+        return nums
